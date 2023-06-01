@@ -12,7 +12,9 @@ export class LocationsService {
 
     async findAll(): Promise<Location[]> {
         try {
-            return await this.locationsRepository.find();
+            return this.locationsRepository.find({
+                select: ['id', 'addressName', 'lat', 'long'],
+            });
         } catch (error) {
             throw new Error('Failed to fetch locations from the database.');
         }
@@ -21,6 +23,7 @@ export class LocationsService {
     async findById(id: number): Promise<Location> {
         try {
             const location = await this.locationsRepository.findOne({
+                select: ['id', 'addressName', 'lat', 'long'],
                 where: { id },
             });
             if (!location) {
@@ -32,15 +35,15 @@ export class LocationsService {
         }
     }
 
-    async create(location: Location): Promise<Location> {
+    async create(locationData: Location): Promise<Location> {
         try {
-            return this.locationsRepository.save(location);
+            return this.locationsRepository.save(locationData);
         } catch (error) {
             throw new Error('Failed to create location in the database.');
         }
     }
 
-    async update(id: number, location: Location): Promise<Location> {
+    async update(id: number, locationData: Location): Promise<Location> {
         try {
             const existingLocation = await this.locationsRepository.findOne({
                 where: { id },
@@ -48,8 +51,9 @@ export class LocationsService {
             if (!existingLocation) {
                 throw new NotFoundException(`Location with id ${id} not found.`);
             }
-            await this.locationsRepository.update(id, location);
+            await this.locationsRepository.update(id, locationData);
             return this.locationsRepository.findOne({
+                select: ['id', 'addressName', 'lat', 'long'],
                 where: { id },
             });
         } catch (error) {

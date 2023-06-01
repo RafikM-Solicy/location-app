@@ -9,7 +9,7 @@ export class LocationsController {
     @Get()
     async findAll(): Promise<Location[]> {
         try {
-            return await this.locationsService.findAll();
+            return this.locationsService.findAll();
         } catch (error) {
             throw new Error('Failed to fetch locations.');
         }
@@ -18,16 +18,16 @@ export class LocationsController {
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Location> {
         try {
-            return await this.locationsService.findById(id);
+            return this.locationsService.findById(id);
         } catch (error) {
             throw new Error(`Failed to fetch location with id ${id}.`);
         }
     }
 
     @Post()
-    async create(@Body() location: Location): Promise<Location> {
+    async create(@Body() locationData: Location): Promise<Location> {
         try {
-            return await this.locationsService.create(location);
+            return this.locationsService.create(locationData);
         } catch (error) {
 
             throw new Error('Failed to create location.');
@@ -35,9 +35,9 @@ export class LocationsController {
     }
 
     @Put(':id')
-    async createOrReplace(@Param('id') id: number, @Body() location: Location): Promise<Location> {
+    async createOrReplace(@Param('id') id: number, @Body() locationData: Location): Promise<Location> {
         try {
-            return await this.locationsService.update(id, location);
+            return this.locationsService.update(id, locationData);
         } catch (error) {
             throw new Error(`Failed to create or replace location with id ${id}.`);
         }
